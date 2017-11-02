@@ -1,0 +1,113 @@
+@font-face {
+    font-family:'Bloomfield';
+    src: url('./fonts/web/EOT/Bloomfield_W_Rg.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/web/WOFF/Bloomfield_W_Rg.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'BloomfieldBold';
+    src: url('./fonts/web/EOT/Bloomfield_W_Bd.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/web/WOFF/Bloomfield_W_Bd.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'BloomfieldItalic';
+    src: url('./fonts/web/EOT/Bloomfield_W_It.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/web/WOFF/Bloomfield_W_It.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'BloomfieldBlack';
+    src: url('./fonts/web/EOT/Bloomfield_W_Blk.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/web/WOFF/Bloomfield_W_Blk.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    box-sizing: border-box;
+    font-family: Bloomfield;
+}
+html, body {
+    background: #F5F5F5;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+html, .root {
+    font-size: 18px;
+    line-height: 23px;
+  }
+  body, .article {
+    font-family: sans-serif;
+    font-size: 1rem;
+    line-height: 1.2777778rem;
+    margin: auto;
+  }
+  h1, .h1 {
+    font-size: 4.2222222rem;
+    line-height: 5.1111111rem;
+    margin-top: 1.2777778rem;
+    margin-bottom: 2.5555556rem;
+  }
+  h2, .h2 {
+    font-size: 2.6111111rem;
+    line-height: 3.8333333rem;
+    margin-top: 1.2777778rem;
+    margin-bottom: 1.2777778rem;
+  }
+  h3, .h3 {
+    font-size: 1.6111111rem;
+    line-height: 2.5555556rem;
+    margin-top: 1.2777778rem;
+    margin-bottom: 0rem;
+  }
+  h4, .h4 {
+    font-size: 1rem;
+    line-height: 1.2777778rem;
+    margin-top: 1.2777778rem;
+    margin-bottom: 0rem;
+  }
+  h5, .h5 {
+    font-size: 1rem;
+    line-height: 1.2777778rem;
+    margin-top: 1.2777778rem;
+    margin-bottom: 0rem;
+  }
+  p, ul, ol, pre, table, blockquote {
+    margin-top: 0rem;
+    margin-bottom: 1.2777778rem;
+  }
+  ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+  }
+  
+  /* Let's make sure all's aligned */
+  hr, .hr {
+    border: 1px solid;
+    margin: -1px 0;
+  }
+  a, b, i, strong, em, small, code {
+    line-height: 0;
+  }
+  sub, sup {
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sup {
+    top: -0.5em;
+  }
+  sub {
+    bottom: -0.25em;
+  }
