@@ -1,8 +1,10 @@
 import React from 'react';
 import { ThemeProvider } from 'emotion-theming'
 import styled from 'react-emotion';
-import { Provider as ReduxProvider } from 'react-redux';
+import { Provider } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
 import store from './redux';
+import client from './apollo';
 import { Landing } from './components';
 import './global.css';
 import sky from './backgrounds/sky.jpg';
@@ -23,13 +25,15 @@ const Layout = styled.main`
 `;
 
 const App = () => (
-	<ReduxProvider store={store}>
-		<ThemeProvider theme={theme}>
-			<Layout>
-					<Landing />
-			</Layout>
-		</ThemeProvider>
-	</ReduxProvider>
+	<ApolloProvider store={store} client={client}>
+		<Provider store={store}>
+			<ThemeProvider theme={theme}>
+				<Layout>
+						<Landing />
+				</Layout>
+			</ThemeProvider>
+		</Provider>
+	</ApolloProvider>
 );
 
 export default App;

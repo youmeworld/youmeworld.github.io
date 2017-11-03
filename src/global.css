@@ -44,7 +44,7 @@ html, body {
     box-sizing: border-box;
 }
 html, .root {
-    font-size: 18px;
+    font-size: calc(0.5vw + 1vh);
     line-height: 23px;
   }
   body, .article {
