@@ -5,16 +5,13 @@ import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import store from './redux';
 import client from './apollo';
-import { Landing } from './components';
+import { Landing, Map } from './components';
 import './global.css';
 import sky from './backgrounds/sky.jpg';
 const theme = {};
 
 const Layout = styled.main`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-
+	display: block;
 	height: 100vh;
 	background: #e52 no-repeat center/100% url(${sky});
 	background-size: cover;
@@ -30,6 +27,7 @@ const App = () => (
 			<ThemeProvider theme={theme}>
 				<Layout>
 						<Landing />
+						<Map />
 				</Layout>
 			</ThemeProvider>
 		</Provider>
