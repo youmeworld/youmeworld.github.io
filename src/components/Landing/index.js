@@ -1,26 +1,25 @@
 import React from 'react';
-import styled from 'react-emotion';
-import { compose, withProps } from 'recompose';
-import { Field, reduxForm, SubmissionError } from 'redux-form'
 import { func, bool } from 'prop-types';
+import styled, { css } from 'react-emotion';
+import { compose, withProps, lifecycle } from 'recompose';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { FormInput, ErrorText, WarningText, SearchBox } from '../'
+import { Fade } from 'react-reveal';
+import Typist from 'react-typist';
+import { FormInput, SearchBox, Logo } from '../';
 
-const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g;
+const orangeUnderlined = css`
+	font-family: 'Pacifico', cursive;
+	color: rgba(255, 141, 0, .9);
+`;
 
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
-	height: 80vh;
-`;
-
-const FormWrapper = styled.div`
-	text-align: center;
-	padding: 0.5rem;
-	margin-bottom: 0;
+	height: 100vh;
 `;
 
 const Nav = styled.div`
@@ -29,66 +28,38 @@ const Nav = styled.div`
 `;
 
 const AppName = styled.h1`
-	font-size: calc(5vw + 5vh);
+	display: flex;
+	justify-content: center;
+	font-size: calc(4vw + 3vh);
 `;
 
 const Appeal = styled.h2`
 	padding: 0 2rem;
+	margin: 0;
 `;
 
-const Logo = styled.h1`
-`;
-
-const Cta = styled.h3`
-	color: white;
+const Cta = styled.h2`
+	${orangeUnderlined}
 	margin-bottom: 1rem;
+	text-decoration: underline;
+`;
+
+const FormWrapper = styled.div`
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 auto;
+	text-align: center;
 `;
 
 const Form = styled.form`
-	margin: 0.5rem;
-	padding: 0.5rem;
-	cursor: pointer;
+	position: relative;
 	display: flex;
-	justify-content: center;
 	flex-wrap: wrap;
-
-	@media screen and (max-width: 560px) {
-		flex-direction: column;
-	}
-
-	&:first-child {
-		margin-right: 0;
-	}
-`;
-
-const InputField = styled.input`
-	padding: 1rem;
-	margin: 0;	
-`;
-
-const Label = styled.label`
-	flex: 1;
-	margin-right: 1rem;
-	display: flex;
 	flex-direction: column;
-	&:last-of-type {
-		margin-right: 0;
-	}
-
-	
-	@media screen and (max-width: 630px) {
-		margin-right: 1rem;
-		&:nth-of-type(2) {
-			margin-right: 0;
-		}
-	}
-	@media screen and (max-width: 560px) {
-		margin-right: 0rem;
-	}
-	
-	> * {
-		font-size: 1.5rem;
-	}
+	justify-content: center;
+	width: 100%;
 `;
 
 const Submit = styled.button`
@@ -96,7 +67,10 @@ const Submit = styled.button`
 	background: rgba(150, 200, 130, 1);
 	padding: 1.15rem;
 	margin-top: 1rem;
+	margin-left: auto;
 	font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
 	
 	border: none;
 	outline: none;
@@ -120,98 +94,153 @@ const newUserMutation = gql`
 	}
 `;
 
-const warn = values => {
-  const warnings = {}
-  // if (!values.email) {
-  //   warnings.email = 'Did you type an email?'
-  // }
-  return warnings
-}
-const validate = values => {
-	const errors = {}
-	if (values.email){
-		if (!values.email.match(emailRegex))
-			errors.email = 'Not a valid email! 🙃'
+const warn = (values) => {
+	const warnings = {};
+	if (!values.name) {
+		warnings.name = 'Please enter your name!';
 	}
-  return errors
-}
+	if (!values.dreamDestination) {
+		warnings.dreamDestination = 'Please enter your dream destination!';
+	}
+	return warnings;
+};
+
+const validate = (values) => {
+	const errors = {};
+	if (!values.name) {
+    errors.name = 'Required';
+  }
+	if (!values.email) {
+    errors.email = 'Required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address';
+  }
+	return errors;
+};
 
 const enhance = compose(
 	reduxForm({
 		form: 'contact',
 		warn,
-		validate
+		validate,
 	}),
-	graphql(
-		newUserMutation
-	),
+	graphql(newUserMutation),
+	lifecycle({
+		componentDidMount: () => {
+		},
+	}),
 	withProps(({ mutate, reset, ...props }) => ({
 		addInterstedUser: (values) => {
-			console.log(props);
+			const error = [];
 			if (!values.email) {
-				return new SubmissionError({
+				error.push(new SubmissionError({
 					email: 'Please enter your email',
-					_error: 'Login failed!'
-				})
-			} 
+					_error: 'No name entered',
+				}));
+			}
+			if (!values.name) {
+				error.push(new SubmissionError({
+					email: 'Please enter your name',
+					_error: 'No name entered',
+				}));
+			}
+			if (!values.dreamDestination) {
+				error.push(new SubmissionError({
+					email: 'Please enter your dream destination',
+					_error: 'No destination entered',
+				}));
+			}
+
+			if (error.length) {
+				return;
+			}
+
 			reset();
 			mutate({
 				variables: {
 					isPublished: true,
-					...values
-				}
-			})
+					...values,
+				},
+			});
 		},
-		...props
-	}))
-)
+		...props,
+	})),
+);
 
 const HiddenField = styled(Field)`
 	display: none;
 	visibility: hidden;
-`; 
+`;
 
-const Landing = ({ addInterstedUser, handleSubmit, submitting, mutate, change, reset, ...props }) => console.log(props) || (
-	<Wrapper>
-		<Nav>
-			<AppName>youme.world</AppName>
-			<Appeal>Trip planning for busy wanderers.</Appeal>
-		</Nav>
-		<Logo>
-			<span role="img" aria-label="img"> 	
-				🌍📌
-			</span>
-		</Logo>
-		<FormWrapper>
-			<Cta>Earn passive income traveling and blogging!</Cta>
-			<Form onSubmit={handleSubmit(addInterstedUser)}>
-				<Field 
-					label="Email"
-					name="email"
-					component={FormInput}
-					type="email"
-					placeholder="wander@youme.world"
-				/>
-				<Field 
-					label="Name"
-					name="name"
-					type="text"
-					component={FormInput}
-					placeholder="Fresh Prince"
-				/>
-				<HiddenField label="geo" name="geometry" type="text" component="input" />
-				<Field
-					label="Dream Destination"
-					name="dreamDestination"
-					type="text"
-					change={change}
-					reset={reset}
-					component={SearchBox}
-				/>
-				<Submit type="submit" disabled={submitting}>Lets Go!</Submit>
-			</Form>
-		</FormWrapper>
-	</Wrapper>
+const Landing = ({
+ addInterstedUser, handleSubmit, submitting, mutate, change, reset, ...props
+ }) => (
+   <Wrapper>
+     <Nav>
+       <AppName>
+         <Fade up delay={200}>
+           <span>youme.</span>
+         </Fade>
+         <Fade right delay={250}>
+           <span>world</span>
+         </Fade>
+       </AppName>
+       <Fade up delay={400}>
+         <Appeal>
+           <Typist
+             cursor={{
+							show: true,
+							blink: true,
+							element: '',
+						}}
+             delay={1000}
+           >Trip planning for busy wanderers.
+           </Typist>
+         </Appeal>
+       </Fade>
+       <Logo />
+     </Nav>
+     <FormWrapper>
+       <Fade up delay={2000}>
+         <Cta>
+            Earn money traveling and blogging.
+         </Cta>
+       </Fade>
+       <Form onSubmit={handleSubmit(addInterstedUser)}>
+         <Fade up delay={2500}>
+           <Field
+             label="Name"
+             name="name"
+             type="text"
+             component={FormInput}
+             placeholder="Fresh Prince"
+           />
+           <Field
+             label="Email"
+             name="email"
+             component={FormInput}
+             type="email"
+             placeholder="wander@youme.world"
+           />
+           <Field
+             label="Dream Destination"
+             name="dreamDestination"
+             type="text"
+             change={change}
+             reset={reset}
+             component={SearchBox}
+           />
+           <HiddenField
+             label="geo"
+             name="geometry"
+             type="text"
+             component="input"
+           />
+           <Submit type="submit" disabled={submitting}>Get invited!</Submit>
+         </Fade>
+       </Form>
+     </FormWrapper>
+   </Wrapper>
 );
 
 Landing.propTypes = {

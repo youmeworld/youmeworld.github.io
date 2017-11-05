@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import styled from 'react-emotion';
 
-const WarningText = (props) => (
-	<div>
-		WarningText
-	</div>
-);
-
-WarningText.propTypes = {};
-WarningText.defaultProps = {};
+const WarningText = styled.span`
+	background-color: rgba(255, 170, 34, 0.8);
+	font-size: 1.45rem;
+	padding: 0.5rem;
+	color: #fff;
+	right: 0;
+	left: 0;
+	bottom: 0;
+`;
 
 export default WarningText;

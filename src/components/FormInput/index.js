@@ -1,18 +1,31 @@
 import React from 'react';
-import { Label, For, InputField, ErrorText, WarningText } from '../';
+import styled from 'react-emotion';
+import { Label, InputField, ErrorText, WarningText } from '../';
 // import PropTypes from 'prop-types';
 
-const FormInput = ({ placeholder, label, meta: { touched, error, warning }, input, type }) => {
-	return (
-		<Label>
-			{touched &&
+const Wrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	
+	flex: 1;
+	margin-top: 1rem;
+`;
+
+const FormInput = ({
+ placeholder, label, meta: { touched, error, warning }, input, type,
+}) => (
+  <Wrapper>
+    <Label error={touched && error} label={label}>
+      {label}
+      {touched &&
         ((error && <ErrorText>{error}</ErrorText>) ||
           (warning && <WarningText>{warning}</WarningText>))}
-			<For>{label}</For>
-			<InputField {...input} placeholder={placeholder} type={type} />
-		</Label>
-	)
-}
+    </Label>
+    <InputField {...input} placeholder={placeholder} type={type} />
+  </Wrapper>
+	);
 
 // FormInput.propTypes = {};
 

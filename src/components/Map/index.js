@@ -3,10 +3,9 @@ import React from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import styled from 'react-emotion';
-import { connect } from 'react-redux';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import SearchBox from 'react-google-maps/lib/components/places/SearchBox';
-import { compose, lifecycle, withProps, withState, withHandlers } from "recompose";
+import { compose, lifecycle, withProps, branch, renderNothing } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Aubergine from './style.json';
@@ -28,44 +27,48 @@ const placeGeometry = gql`
 
 const Map = compose(
   graphql(placeGeometry),
-  withProps((props)=>({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyD6U3EySAnVr7UPa_I5KDaINIxzDdSaJg0&v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
-    pins: (props.data.allPersons || []).map((person) => person.geometry)
+  branch(
+    () => !window.google,
+    renderNothing,
+  ),
+  withProps(props => ({
+    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD6U3EySAnVr7UPa_I5KDaINIxzDdSaJg0&v=3.exp&libraries=geometry,drawing,places',
+    loadingElement: <div style={{ height: '100%' }} />,
+    containerElement: <div style={{ height: '400px' }} />,
+    mapElement: <div style={{ height: '100%' }} />,
+    pins: (props.data.allPersons || []).map(person => person.geometry),
   })),
   lifecycle({
     componentWillMount() {
-      const refs = {}
-      const pins =this.props.pins;
+      const refs = {};
+      const pins = this.props.pins;
       this.setState({
         bounds: null,
         center: {
-          lat: 41.9, lng: -87.624
+          lat: 41.9, lng: -87.624,
         },
         markers: [...pins],
-        onMapMounted: ref => {
+        onMapMounted: (ref) => {
           refs.map = ref;
         },
         onBoundsChanged: () => {
           this.setState({
             bounds: refs.map.getBounds(),
             center: refs.map.getCenter(),
-          })
+          });
         },
-        onSearchBoxMounted: ref => {
+        onSearchBoxMounted: (ref) => {
           refs.searchBox = ref;
         },
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
           const bounds = new google.maps.LatLngBounds();
 
-          places.forEach(place => {
+          places.forEach((place) => {
             if (place.geometry.viewport) {
-              bounds.union(place.geometry.viewport)
+              bounds.union(place.geometry.viewport);
             } else {
-              bounds.extend(place.geometry.location)
+              bounds.extend(place.geometry.location);
             }
           });
           const nextMarkers = places.map(place => ({
@@ -79,50 +82,50 @@ const Map = compose(
           });
           // refs.map.fitBounds(bounds);
         },
-      })
+      });
     },
   }),
   withScriptjs,
-  withGoogleMap
-)(props => console.log('MAP', props) ||
-	<Wrapper>
-		<GoogleMap
-			ref={props.onMapMounted}
-			defaultZoom={15}
-			center={props.center || get(props.form.contact, '')}
-			onBoundsChanged={props.onBoundsChanged}
-		>
-			<SearchBox
-				ref={props.onSearchBoxMounted}
-				bounds={props.bounds}
-				controlPosition={google.maps.ControlPosition.TOP_LEFT}
-				onPlacesChanged={props.onPlacesChanged}
-			>
-				<input
-					type="text"
-					placeholder="Where is your dream destination?"
-					style={{
-						boxSizing: `border-box`,
-						border: `1px solid transparent`,
-						width: `300px`,
-						height: `32px`,
-						marginTop: `10px`,
-						padding: `1rem`,
-						borderRadius: `3px`,
-						boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-						fontSize: `1rem`,
-						outline: `none`,
-						textOverflow: `ellipses`,
+  withGoogleMap,
+)(({
+ markers, onMapMounted, center, form, onBoundsChanged, onSearchBoxMounted, bounds, onPlacesChanged,
+}) =>
+  (<Wrapper>
+    <GoogleMap
+      ref={onMapMounted}
+      defaultZoom={4}
+      center={center || get(form.contact, '')}
+      onBoundsChanged={onBoundsChanged}
+      defaultOptions={{ styles: Aubergine }}
+    >
+      <SearchBox
+        ref={onSearchBoxMounted}
+        bounds={bounds}
+        controlPosition={google.maps.ControlPosition.TOP_LEFT}
+        onPlacesChanged={onPlacesChanged}
+      >
+        <input
+          type="text"
+          placeholder="Where is your dream destination?"
+          style={{
+						boxSizing: 'border-box',
+						border: '1px solid transparent',
+						width: '300px',
+						height: '32px',
+						marginTop: '10px',
+						padding: '1rem',
+						borderRadius: '3px',
+						boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
+						fontSize: '1rem',
+						outline: 'none',
+						textOverflow: 'ellipses',
 					}}
-				/>
-			</SearchBox>
-			{props.markers.map((marker, index) =>
-				<Marker key={index} position={marker.position} />
-			)}
-		</GoogleMap>
-	</Wrapper>
-);
-
+        />
+      </SearchBox>
+      {markers.map((marker, index) =>
+        <Marker key={index} position={marker.position} />)}
+    </GoogleMap>
+  </Wrapper>));
 
 
 Map.propTypes = {};
