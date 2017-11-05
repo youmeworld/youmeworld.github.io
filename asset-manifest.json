@@ -1,8 +1,8 @@
 {
   "main.css": "static/css/main.4d56626b.css",
   "main.css.map": "static/css/main.4d56626b.css.map",
-  "main.js": "static/js/main.f9d20c71.js",
-  "main.js.map": "static/js/main.f9d20c71.js.map",
+  "main.js": "static/js/main.a9b21a74.js",
+  "main.js.map": "static/js/main.a9b21a74.js.map",
   "static/media/Bloomfield_W_Bd.eot": "static/media/Bloomfield_W_Bd.16a19475.eot",
   "static/media/Bloomfield_W_Bd.woff": "static/media/Bloomfield_W_Bd.e446a1ad.woff",
   "static/media/Bloomfield_W_Blk.eot": "static/media/Bloomfield_W_Blk.559dca3f.eot",
@@ -11,6 +11,5 @@
   "static/media/Bloomfield_W_It.woff": "static/media/Bloomfield_W_It.6990fa20.woff",
   "static/media/Bloomfield_W_Rg.eot": "static/media/Bloomfield_W_Rg.47fa67a0.eot",
   "static/media/Bloomfield_W_Rg.woff": "static/media/Bloomfield_W_Rg.a13f4c2b.woff",
-  "static/media/sky-min.jpg": "static/media/sky-min.066de45e.jpg",
-  "static/media/sky.jpg": "static/media/sky.49034383.jpg"
+  "static/media/sky-min.jpg": "static/media/sky-min.066de45e.jpg"
 }
