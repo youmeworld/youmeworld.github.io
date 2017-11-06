@@ -6,7 +6,7 @@ import styled from 'react-emotion';
 import { withScriptjs } from 'react-google-maps';
 import { compose, lifecycle, withProps, branch, renderNothing } from 'recompose';
 import StandaloneSearchBox from 'react-google-maps/lib/components/places/StandaloneSearchBox';
-import { InputField, Label } from '../';
+import { InputField, Label, ErrorText, WarningText } from '../';
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,6 +16,7 @@ const Wrapper = styled.div`
 
   flex: 1;
   margin-top: 1rem;
+  position: relative;
 `;
 
 const PlacesWithStandaloneSearchBox = compose(
@@ -24,7 +25,7 @@ const PlacesWithStandaloneSearchBox = compose(
     renderNothing,
   ),
   withProps({
-    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD6U3EySAnVr7UPa_I5KDaINIxzDdSaJg0&v=3.exp&libraries=geometry,drawing,places',
+    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD6U3EySAnVr7UPa_I5KDaINIxzDdSaJg0&v=3.exp&libraries=places',
     loadingElement: <div style={{ height: '100%' }} />,
     containerElement: <div style={{ height: '400px' }} />,
   }),
@@ -49,10 +50,15 @@ const PlacesWithStandaloneSearchBox = compose(
   }),
   withScriptjs,
 )(({
-  onSearchBoxMounted, bounds, onPlacesChanged, input, places,
-}) => (
+  onSearchBoxMounted, bounds, onPlacesChanged, places, input, meta, label, ...props
+}) => console.log(props) || (
   <Wrapper>
-    <Label>Dream Destination</Label>
+    <Label error={meta.touched && meta.error} label={label}>
+      {label}
+      {meta.touched &&
+        ((meta.error && <ErrorText>{meta.error}</ErrorText>) ||
+          (meta.warning && <WarningText>{meta.warning}</WarningText>))}
+    </Label>
     <StandaloneSearchBox
       ref={onSearchBoxMounted}
       bounds={bounds}

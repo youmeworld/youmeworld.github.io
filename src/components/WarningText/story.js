@@ -4,5 +4,4 @@ import WarningText from './';
 
 storiesOf('WarningText', module)
 	.add('base', () =>
-		<WarningText>Component</WarningText>
-	);
+  <WarningText>Component</WarningText>,);
